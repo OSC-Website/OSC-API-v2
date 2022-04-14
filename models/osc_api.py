@@ -22,6 +22,7 @@ class OSC_API(FastAPI):
     """
 
     def __init__(self) -> None:
+        super().__init__()
         # Docs config
         self.title = "OSC-API-v2"
         self.description = "### This is an API to store users"
