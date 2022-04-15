@@ -5,3 +5,4 @@ pydantic==1.9.0
 python-dotenv==0.20.0
 slowapi==0.1.5
 uvicorn==0.17.5
+python-multipart==0.0.5
