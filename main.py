@@ -10,7 +10,7 @@ __version__ = "0.0.1"
 import uvicorn
 
 from models import OSC_API
-from api import home
+from api import home, oauth, users
 
 
 app = OSC_API()
@@ -20,6 +20,8 @@ app = OSC_API()
 def main():
     # Routers
     app.include_router(home)
+    app.include_router(oauth)
+    app.include_router(users)
 
     # Run with uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000, reload=False)

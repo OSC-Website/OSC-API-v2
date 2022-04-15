@@ -1,5 +1,8 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, HTTPException, Depends
 from fastapi.responses import RedirectResponse
+
+from ..auth.classes import User
+from ..auth.authenticate import get_current_active_user
 
 home = APIRouter()
 
