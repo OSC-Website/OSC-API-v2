@@ -1,4 +1,5 @@
 # Standard library imports
+from typing import Optional
 import os
 
 # Third party imports
@@ -23,10 +24,11 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     """
     Token endpoint - Login here and get your token
 
-    Username and Password are required and must be valid, if correct you will get youre beautiful token
+    Username and Password are required and must be valid, if correct you will get your beautiful token
 
-    Returns:
-        Dict[str, str]
+    Returns
+    -------
+        Dict[str, str]: The access token, token, and acess token type
     """
     user = await get_user(form_data.username)
     if not user:
@@ -46,12 +48,15 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
 async def get_current_user(token: str = Depends(oauth2_scheme)):
     """
     Decrypts a token to extract the user info from it, then it fetches the correct user from the db
-    If user doesnt exist or invalid token it returns and raises an HTTPException
+    If user doesn't exist or invalid token it returns and raises an HTTPException
 
-    token (str) : The users token
+    Parameters
+    ----------
+        token (str): The users token
 
-    Return:
-        User : The user or it returns none and raises an exception
+    Return
+    ------
+        User: The user or it returns none and raises an exception
     """
     key = os.environ["KEY"]
     decrypted_token = await decrypt_token(key, token)
@@ -65,13 +70,13 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     return user
 
 
-async def get_current_active_user(current_user: User = Depends(get_current_user)):
+async def check_auth(current_user: User = Depends(get_current_user)) -> Optional[User]:
     """
-    Gets a user and checks if they are disabled
+    Check if user is active
 
-    Returns:
-        if not disabled it returns the User  
-        else it returns and raises an HTTPException
+    Returns
+    -------
+        If user is not disabled it returns the User
     """
     if current_user.disabled == True:
         raise HTTPException(status_code=400, detail="User is disabled")

@@ -21,10 +21,10 @@ async def get_user(username: str) -> Union[bool, UserInDB]:
     Gets a specific user from the Users table if not found it will return False
 
     Parameters:
-        sername (str) : The username to search for
+        username (str): The username to search for
 
     Returns:
-        Union[bool, DBUser]
+        Union[bool, UserInDB]: If user is not found it returns false. else
     """
     conn = await asyncpg.connect(DATABASE_URL)
     db_result = await conn.fetch("SELECT * FROM USERS WHERE username=$1", username)
@@ -33,10 +33,9 @@ async def get_user(username: str) -> Union[bool, UserInDB]:
     if not len(db_result):
         return False
 
-    disabled = db_result[0][3]
-
-    username = db_result[0][5]
-    hashed_password = db_result[0][6]
+    disabled = True if db_result[0][5] == 0 else False
+    username = db_result[0][6]
+    hashed_password = db_result[0][7]
 
     user = UserInDB(
         username=username, hashed_password=hashed_password, disabled=disabled
@@ -45,6 +44,7 @@ async def get_user(username: str) -> Union[bool, UserInDB]:
     return user
 
 
+# test
 # import asyncio
 # if __name__ == "__main__":
-#     asyncio.run(get_user("FusionSid"))
+#     asyncio.run(get_user("FusionSid")) 
